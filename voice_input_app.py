@@ -39,8 +39,15 @@ class VoiceInputApp:
         self.status_label = tk.Label(frame, text="待機中", bg='#e6f3ff')
         self.status_label.pack(side='left', padx=5)
         
-        self.start_button = tk.Button(frame, text="録音", width=6, command=self.toggle_recording)
-        self.start_button.pack(side='right', padx=5)
+        # ボタンを配置するフレームを追加
+        button_frame = tk.Frame(frame, bg='#e6f3ff')
+        button_frame.pack(side='right', padx=5)
+        
+        self.cancel_button = tk.Button(button_frame, text="×", width=2, command=self.cancel_recording)
+        self.cancel_button.pack(side='right', padx=2)
+        
+        self.start_button = tk.Button(button_frame, text="録音", width=6, command=self.toggle_recording)
+        self.start_button.pack(side='right', padx=2)
 
     def setup_hotkey(self):
         # グローバルホットキーの設定
@@ -88,6 +95,20 @@ class VoiceInputApp:
             messagebox.showerror("エラー", f"処理中にエラーが発生しました：\n{e}")
             self.status_label.config(text="エラー")
         finally:
+            if os.path.exists(audio_file):
+                os.remove(audio_file)
+
+    def cancel_recording(self):
+        if self.is_recording:
+            self.is_recording = False
+            self.recorder.stop_recording()
+            self.status_label.config(text="待機中")
+            # 背景を薄い青に戻す
+            self.root.configure(bg='#e6f3ff')
+            self.status_label.configure(bg='#e6f3ff')
+            self.start_button.configure(text="録音")
+            # 録音ファイルを削除
+            audio_file = self.recorder.get_audio_file()
             if os.path.exists(audio_file):
                 os.remove(audio_file)
 

@@ -1,0 +1,5 @@
+{
+    "backup_directory": "./backups",
+    "backup_retention_days": 30,
+    "hotkey": "shift+f1"
+}

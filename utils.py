@@ -43,7 +43,7 @@ def cleanup_old_backups():
         days_to_keep = config.get('backup_retention_days', 30)
         
         if not os.path.exists(backup_dir):
-            return
+            return 0  # ディレクトリが存在しない場合は0を返す
             
         current_time = datetime.datetime.now()
         deleted_count = 0
